@@ -4,7 +4,7 @@ rm -f core
 ulimit -c unlimited
 cargo build --release
 
-./target/release/testct  & 
+./target/release/test-tag  & 
 sleep 1 
 kill -6  $!
 wait

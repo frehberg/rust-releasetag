@@ -1,10 +1,9 @@
 [package]
-name = "testct"
+name = "test-tag"
 version = "0.1.0"
 authors = ["Frank Rehberger <frehberg@gmail.com>"]
 
 [dependencies]
-
 
 [dependencies.releasetag]
 path    = ".."
