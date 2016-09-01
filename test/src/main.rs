@@ -1,5 +1,6 @@
 #![feature(asm)] 
 #![feature(plugin)]
+#![plugin(bytestool)]
 #[macro_use(releasetag)]
 extern crate releasetag;
 
