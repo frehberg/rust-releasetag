@@ -62,6 +62,6 @@ The script will start the application and after a few seconds sending signal 6 (
 the process to cause the application to core-dump with signal 6. The location of the
 core file will be 'test/core'.
 
-The resulting core-file is searched for the releasetag strings 'BUILD_'. If the tags
-are not found the feature is broken (might happen with new optimizer in place in rust)
-and the script ./test/run_test.sh will return with return value 1 (error).
+The resulting core-file is searched for the releasetag strings 'BUILD_'.  On success the script will return with return value 0, otherwise the feature is broken and return value will be 1.
+
+The feature requires that the optimizer of compiler rustc is not eliminating the 'unused' stacktag variables. The inline assembler expression should prevent the elimination. If upgrading to new release of rustc, one should execute the script to verify the feature.
