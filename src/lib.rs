@@ -16,16 +16,20 @@ macro_rules! releasetag {
         // CAPACITY incl leading and trailing \0 (+2) 
         const CAPACITY : usize = byte_size_of!($tag) + 2;  
         
-        // const data will not be on stack, add leading and trailing null-char \0
+        // Analog to C, declare a type of fixed size, providing a byte-wise copy operator
+        #[derive(Copy, Clone)]
+        struct FixedSize {
+           data: [u8;  CAPACITY],
+        }
+        
+        // const data will not be on stack. As command line tool 'strings' will search for
+        // null-terminated printable chars, add leading and trailing null-char \0 (aka 0u8)
         const CONST_DATA : & 'static [u8;  CAPACITY] = concat_bytes!([0u8],$tag,[0u8]);
         
-        // local array on stack, must be declared as 'mut', otherwise would
-        // be optimized out by compiler
-        let mut stacktag : & mut [u8;  CAPACITY] = & mut [0u8; CAPACITY];
-        // TODO: find a memcpy expression where compiler would verify matching array sizes. 
-        //       Using clone_from_slice will check array-boundaries during runtime. 
-        stacktag[..CAPACITY].clone_from_slice(CONST_DATA);
-        
+        // Create instance of FixedSize and copy chunk byte-wise onto stack,
+        // the bounds are verified during compile time.
+        let stacktag = FixedSize{data : *CONST_DATA};
+
         // nop to force linker to preserve the variable on stack
         unsafe { asm!("" : : "r"(&stacktag)) }
     }};
