@@ -57,7 +57,7 @@ Execute the following script to verify the releasetag feature is working:
 On success, the output should show:
 ```
 BUILD_HOST=host1
-BUILD_TAG=MAIN_2016-wk16-05
+BUILD_TAG=MAIN_2016-wk16-05-AAAA-BBBB-CCCC-DDDD-EEEE-FFFF-GGGG-HHHH-IIII-JJJJ-KKKK
 Success: releasetags found in file 'core'
 ```
 
