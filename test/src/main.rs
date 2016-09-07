@@ -10,14 +10,14 @@ use std::io::stdout;
 use std::io::Write;
 
 fn main() {
-
-    releasetag!(b"BUILD_TAG=MAIN_2016-wk16-05");
+    // test with tag larger than 32 bytes
+    releasetag!(b"BUILD_TAG=MAIN_2016-wk16-05-AAAA-BBBB-CCCC-DDDD-EEEE-FFFF-GGGG-HHHH-IIII-JJJJ-KKKK");
     releasetag!(b"BUILD_HOST=host1");
 
     println!("Waiting until being aborted");
     loop {
       thread::sleep(Duration::from_millis(200));
       print!(".");
-      stdout().flush().ok();      
+      stdout().flush().ok();
     }
 }

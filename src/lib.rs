@@ -17,9 +17,15 @@ macro_rules! releasetag {
         const CAPACITY : usize = byte_size_of!($tag) + 2;  
         
         // Analog to C, declare a type of fixed size, providing a byte-wise copy operator
-        #[derive(Copy, Clone)]
+        #[derive(Copy)]
+        #[allow(dead_code)]
         struct FixedSize {
            data: [u8;  CAPACITY],
+        }
+
+        #[allow(dead_code)]
+        impl Clone for FixedSize {
+           fn clone(&self) -> FixedSize { *self }
         }
         
         // const data will not be on stack. As command line tool 'strings' will search for
