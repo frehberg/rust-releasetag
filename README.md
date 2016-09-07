@@ -30,7 +30,7 @@ extern crate releasetag;
 
 fn main() {
     // The argument must be a byte-string of the form b".." 
-    releasetag!(b"BUILD_TAG=MAIN_2016-wk16-05");
+    releasetag!(b"BUILD_TAG=MAIN_2016-wk16-05-AAAA-BBBB-CCCC-DDDD-EEEE-FFFF-GGGG-HHHH-IIII-JJJJ-KKKK");
     releasetag!(b"BUILD_HOST=host1");
  
     // your application logic here
