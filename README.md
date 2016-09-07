@@ -17,7 +17,7 @@ Example Cargo.toml
 ...
 [dependencies]
 bytestool = "0.2.0"
-releasetag = "0.3.0"
+releasetag = "0.4.0"
 ```
 
 Example: file main.rs
