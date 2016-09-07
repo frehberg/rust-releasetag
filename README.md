@@ -12,6 +12,14 @@ the releasetag from each core-file the developers will be able to tell the corre
 software revision and which debug symbols should be used from archive for further
 investigation of backtraces.
 
+Example Cargo.toml
+```init
+...
+[dependencies]
+bytestool = "0.2.0"
+releasetag = "0.3.0"
+```
+
 Example: file main.rs
 ```rust
 #![feature(asm)] 
