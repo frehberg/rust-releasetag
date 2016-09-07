@@ -6,7 +6,8 @@ Releasetags are placed in context of main() function or on stack of any other th
 
 Postmortem these tags can be extracted from core-dump file, for example release information or application config.
 
-Use case: Imagine multiple releases/devdrops of your software have been shipped to your
+## Use case
+Imagine multiple releases/devdrops of your software have been shipped to your
 customer. Now the customer is filing a crash-report with attached core-file(s). Extracting
 the releasetag from each core-file the developers will be able to tell the correspondig
 software revision and which debug symbols should be used from archive for further
