@@ -1,13 +1,14 @@
-#![feature(asm)] 
 #![feature(plugin)]
 #![plugin(bytestool)]
 #[macro_use(releasetag)]
 extern crate releasetag;
+use releasetag::tag;
 
 use std::time::Duration;
 use std::thread;
 use std::io::stdout;
 use std::io::Write;
+
 
 fn main() {
     // test with tag larger than 32 bytes

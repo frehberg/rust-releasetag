@@ -3,14 +3,28 @@
 DIR=$(dirname $0)
 
 cd ${DIR}
+# DEBUG="y"
 
 rm -f core
 ulimit -c unlimited
-cargo build --release
+if test -z "$DEBUG"; then
+    cargo build --release
 
-./target/release/test-tag  & 
+    set -x
+    LD_LIBRARY_PATH=./target/release/deps/ ./target/release/test-tag  &
+    set +x
+else
+    cargo build
+
+    set -x
+    LD_LIBRARY_PATH=./target/debug/deps/ ./target/debug/test-tag  &
+    set +x
+fi
+
+CHILD_PID=$!
+
 sleep 1 
-kill -6  $!
+kill -6  ${CHILD_PID}
 wait
 
 ## wait until core file has been written
