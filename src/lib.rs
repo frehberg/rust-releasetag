@@ -12,33 +12,34 @@ macro_rules! releasetag {
     // non-printable characters causing 'strings' command line tool to print fragments of
     // tag only (causing loss of information)
     
-    ($tag:expr) => {{
-        // CAPACITY incl leading and trailing \0 (+2) 
-        const CAPACITY : usize = byte_size_of!($tag) + 2;  
-        
-        // Analog to C, declare a type of fixed size, providing a byte-wise copy operator
-        #[derive(Copy)]
-        #[allow(dead_code)]
-        struct FixedSize {
-           data: [u8;  CAPACITY],
-        }
+    ($tag:expr) => {
+        let _tag = {
+            // CAPACITY incl leading and trailing \0 (+2)
+            const CAPACITY : usize = byte_size_of!($tag) + 2;
 
-        #[allow(dead_code)]
-        impl Clone for FixedSize {
-           fn clone(&self) -> FixedSize { *self }
-        }
-        
-        // const data will not be on stack. As command line tool 'strings' will search for
-        // null-terminated printable chars, add leading and trailing null-char \0 (aka 0u8)
-        const CONST_DATA : & 'static [u8;  CAPACITY] = concat_bytes!([0u8],$tag,[0u8]);
-        
-        // Create instance of FixedSize and copy chunk byte-wise onto stack,
-        // the bounds are verified during compile time.
-        let stacktag = FixedSize{data : *CONST_DATA};
+            // Analog to C, declare a type of fixed size, providing a byte-wise copy operator
+            struct FixedSize {
+               data: [u8;  CAPACITY],
+            }
 
-        // nop to force linker to preserve the variable on stack
-        unsafe { asm!("" : : "r"(&stacktag)) }
-    }};
+            impl Drop for FixedSize {
+                fn drop(&mut self) {
+                    // nop to force linker to preserve the variable on stack
+                    unsafe { asm!("" : : "r"(self)) }
+                }
+            }
+
+            // const data will not be on stack. As command line tool 'strings' will search for
+            // null-terminated printable chars, add leading and trailing null-char \0 (aka 0u8)
+            const CONST_DATA : & 'static [u8;  CAPACITY] = concat_bytes!([0u8],$tag,[0u8]);
+
+            // Create instance of FixedSize and copy chunk byte-wise onto stack,
+            // the bounds are verified during compile time.
+            let stacktag = FixedSize{data : *CONST_DATA};
+
+            stacktag
+        };
+    }
 }
 
 #[cfg(test)]
