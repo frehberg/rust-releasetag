@@ -39,6 +39,8 @@ macro_rules! releasetag {
 
             stacktag
         };
+        // no-op preventing deadcode compiler warnings
+        unsafe { asm!("" : : "r"(&_tag.data)) }
     }
 }
 
@@ -50,6 +52,7 @@ mod tests {
     // in the core file the feature did fail.
     #[test]
     fn valid_macro() {
+        #[allow(dead_code)]
         releasetag!(b"TAG1=123");
         releasetag!(b"TAG2=ABC");
     }
