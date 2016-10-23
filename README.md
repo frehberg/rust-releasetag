@@ -6,8 +6,7 @@ Releasetags are placed in context of main() function or on stack of any other th
 
 ## Use case
 Imagine multiple releases/devdrops of your software have been shipped to your
-customer. Now the customer is filing multiple crash-reports with attached core-file(s), but customer is providing unreliable information regarding the the corresponding release
-in question.
+customer. Now the customer is filing multiple crash-reports with attached core-file(s), but customer is providing unreliable information regarding the corresponding release in question.
 
 Now, extracting the releasetag from each core-file the developers will be able to tell the correspondig
 software revision and knows which debug symbols should be used from archive for further
