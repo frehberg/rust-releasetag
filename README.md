@@ -37,7 +37,7 @@ fn main() {
     // your application logic here
 }
 ```
-In case the application did coredump to file 'core', the following comamnd can be used to extract the tags from core-file:
+In case the application did coredump to file 'core', the following command can be used to extract the tags from core-file:
 ```
 cat core | strings | grep BUILD_
 ```
