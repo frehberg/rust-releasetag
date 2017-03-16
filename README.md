@@ -16,8 +16,8 @@ Example Cargo.toml
 ```init
 ...
 [dependencies]
-bytestool = "0.2.0"
-releasetag = "0.6.0"
+bytestool = "0.3.0"
+releasetag = "0.7.0"
 ```
 
 Example: file main.rs
