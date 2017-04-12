@@ -16,22 +16,22 @@ Example Cargo.toml
 ```init
 ...
 [dependencies]
-bytestool = "0.3.0"
-releasetag = "0.7.0"
+releasetag = "0.8.0"
 ```
 
 Example: file main.rs
 ```rust
 #![feature(asm)] 
-#![feature(plugin)]
-#![plugin(bytestool)]
 #[macro_use(releasetag)]
 extern crate releasetag;
 
 fn main() {
-    // The argument must be a byte-string of the form b".." 
+    // The releasetag macro must be used within main-routine
+    // and the arguments must be byte-strings of the form b".."
     releasetag!(b"BUILD_TAG=MAIN_2016-wk16-05-AAAA-BBBB-CCCC-DDDD-EEEE-FFFF-GGGG-HHHH-IIII-JJJJ-KKKK");
     releasetag!(b"BUILD_HOST=host1");
+    // or as byte array
+    releasetag!(&[0x42u8, 0x55u8, 0x49u8, 0x4cu8, 0x44u8, 0x5fu8]); // "BUILD_"
  
     // your application logic here
 }
@@ -42,7 +42,11 @@ cat core | strings | grep BUILD_
 ```
 The argument of releasetag!() must be a byte-string (array) of 8bit elements, with unlimited length. Regular UTF-Strings are not supported due to non-printable chars.  
 
-The releasetag is a compile-time feature, without any processing during runtime. The overhead is 2 bytes. For example, if the releasetag! defines a byte string of 126 characters, the occupied stack-size would be 128 bytes, adding leading and trailing null-characters.
+The releasetag is a compile-time feature, without any processing during runtime. Boundary checks of the array are performed during compile time.
+
+The overhead depends on the underlying architecture and default integer-size. For 32bit architecture the overhead is 5 bytes, for 64bit architectures the overhead is 9bytes (sum of byte-size of primitive 'usize' and byte-size of u8).  For example on 32bit arch, if the releasetag! defines a byte string of 50 characters, the occupied stack-size would be 55 bytes, adding leading and trailing null-characters.
+
+Byte strings of the form b"Hallo" is length encoded without trailing '\0' and this specific string has static size of  5 unsigned octets 'u8', with Rust-notation '&[u8; 5]'
 
 ## Demonstrator
 Execute the following script to verify the releasetag feature is working:
@@ -65,7 +69,7 @@ After a few seconds he script continues sending signal 6 (ABORT) to
 the process to cause the application to core-dump with signal 6. The location of the
 core file will be 'test/core'.
 
-The resulting core-file is scanned for the releasetag strings 'BUILD_'.  
+The resulting core-file is scanned for the releasetag strings 'BUILD_'.
 
 On success the script will return with return value 0, otherwise the feature is broken and return value will be 1.
 
