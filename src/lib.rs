@@ -1,5 +1,3 @@
-#![feature(asm)]
-
 #[macro_export]
 macro_rules! releasetag {
     
@@ -9,34 +7,29 @@ macro_rules! releasetag {
     // 32bit arch (or 129 bytes on 64bit architecture) adding leading and trailing null-characters.
     //   
     // The feature is restricted to byte-strings as unicode strings might contain 
-    // non-printable characters causing 'strings' command line tool to print fragments of
+    // non-printable characters causing the command line tool 'strings'  to print fragments of
     // tag only (causing loss of information)
-    
+    // 
+    // Thanks to Japaric's help, this crate no longer depends on nightly features.
     ($tag:expr) => {
         let _tag = {
+            // Prevent reordering of struct-members
+            #[repr(C)]
             struct EmbeddedOctetBuf<T> {
-                pad0 : usize, // leading '\0' using default integer alignment
-                data : T,  // user defined array or static string
-                pad1 : u8, // trailing '\0' consecutive to array
+                pad0 : usize, // Leading '\0' using default integer alignment
+                data : T,     // User defined array or static string
+                pad1 : u8,    // Trailing '\0' consecutive to array
             }
 
-            // prevent optimizer removing the object from stack
-            impl<T> Drop for EmbeddedOctetBuf<T> {
-                fn drop(&mut self) {
-                    // nop to force linker to preserve the variable on stack
-                    unsafe { asm!("" : : "r"(self)) }
-                }
-            }
-
-            // define stacktag with aligned leading and trailing \0
+            // Define stacktag, with leading (and aligned) 0 and trailing \0, fencing the string.
             let stacktag = EmbeddedOctetBuf{pad0: 0, data : *$tag, pad1: 0x0u8};
 
             stacktag
         };
-        // no-op preventing deadcode compiler warnings
-        unsafe { asm!("" : : "r"(&_tag.pad0)) }
-        unsafe { asm!("" : : "r"(&_tag.data)) }
-        unsafe { asm!("" : : "r"(&_tag.pad1)) }
+        // "Volatile" will prevent compiler from
+        // * optimizing the unused value out
+        // * turning the stack value into a static value
+        let _myref = unsafe { std::ptr::read_volatile(&&_tag); };
     }
 }
 
