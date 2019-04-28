@@ -1,7 +1,8 @@
 [package]
 name = "releasetag"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Frank Rehberger <frehberg@gmail.com>", "panicbit <panicbit.dev@gmail.com>"]
 description = "Define releasetags being embedded in crash-files 'core'"
 license = "Apache-2.0"
+readme = "README.md"
 documentation = "https://github.com/frehberg/rust-releasetag"
