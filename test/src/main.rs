@@ -1,4 +1,3 @@
-#![feature(asm)] 
 #[macro_use(releasetag)]
 extern crate releasetag;
 

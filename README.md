@@ -16,12 +16,11 @@ Example Cargo.toml
 ```init
 ...
 [dependencies]
-releasetag = "0.8.0"
+releasetag = "^1.0"
 ```
 
 Example: file main.rs
 ```rust
-#![feature(asm)] 
 #[macro_use(releasetag)]
 extern crate releasetag;
 
